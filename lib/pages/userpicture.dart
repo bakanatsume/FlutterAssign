@@ -7,6 +7,7 @@ import 'package:krisha/colors/colors.dart';
 import 'package:krisha/model/add_post_model.dart';
 import 'package:krisha/services/admin_log.dart';
 import 'package:http/http.dart' as http;
+import 'package:krisha/utils/snackbar.utils.dart';
 
 import '../main.dart';
 
@@ -159,10 +160,12 @@ class _UserPictureState extends State<UserPicture> {
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   onPressed: ()async {
-                    print(_caption.text);
-                    print(_imageFile.toString());
-
-                    final filename = _imageFile!.path.split('/').last;
+                    if(_imageFile== null){
+                      snackThis(
+                          context: context,
+                          color: Colors.red,
+                          content: Text("Please Add photo at least"));
+                    }
 
                     // final postContent = AddPostRequest(
                     //   image: _images.toString(),
@@ -171,6 +174,10 @@ class _UserPictureState extends State<UserPicture> {
                     final res = await AddPostServiceWithToken().addPost(_imageFile!, _caption.text);
                     if(res.success==true){
                       print("post added");
+                      snackThis(
+                          context: context,
+                          color: Colors.green,
+                          content: Text("Post Added"));
                     }
                     else(
                     print(res.msg.toString())
