@@ -1,15 +1,16 @@
 // To parse this JSON data, do
 //
-//     final editProfile = editProfileFromJson(jsonString);
+//     final getUserResponse = getUserResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-List<EditProfile> editProfileFromJson(String str) => List<EditProfile>.from(json.decode(str).map((x) => EditProfile.fromJson(x)));
+List<GetUserResponse> getUserResponseFromJson(String str) => List<GetUserResponse>.from(json.decode(str).map((x) => GetUserResponse.fromJson(x)));
 
-String editProfileToJson(List<EditProfile> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String getUserResponseToJson(List<GetUserResponse> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class EditProfile {
-  EditProfile({
+class GetUserResponse {
+  GetUserResponse({
+    this.id,
     this.username,
     this.password,
     this.fname,
@@ -21,6 +22,7 @@ class EditProfile {
     this.v,
   });
 
+  String? id;
   String? username;
   String? password;
   String? fname;
@@ -29,9 +31,10 @@ class EditProfile {
   String? email;
   String? phoneNo;
   String? profilePic;
-  int ? v;
+  int? v;
 
-  factory EditProfile.fromJson(Map<String, dynamic> json) => EditProfile(
+  factory GetUserResponse.fromJson(Map<String, dynamic> json) => GetUserResponse(
+    id: json["_id"],
     username: json["username"],
     password: json["password"],
     fname: json["fname"],
@@ -44,6 +47,7 @@ class EditProfile {
   );
 
   Map<String, dynamic> toJson() => {
+    "_id": id,
     "username": username,
     "password": password,
     "fname": fname,

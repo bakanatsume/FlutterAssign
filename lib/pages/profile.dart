@@ -6,19 +6,20 @@ import 'package:krisha/model/edit_profile_model.dart';
 import 'package:krisha/pages/home.dart';
 import 'package:krisha/services/admin_log.dart';
 import 'package:krisha/utils/snackbar.utils.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
 
-
-
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _phone = TextEditingController();
+  final TextEditingController _email = TextEditingController();
   
   
   @override
   Widget build(BuildContext context) {
-    _usernameController.text = localStorage.getString("username").toString();
+
+      _usernameController.text = localStorage.getString("username").toString();
+      // asd
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -75,9 +76,9 @@ class Profile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(1),
                       ),
                       child: TextFormField(
-                        controller: _passwordController,
+                        controller: _email,
                         decoration: InputDecoration(
-                            hintText: "Password",
+                            hintText: "Email",
                             hintStyle: TextStyle(
                               letterSpacing: 2,
                               color: AppColor.BROWN,
@@ -97,9 +98,9 @@ class Profile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(1),
                       ),
                       child: TextFormField(
-                        controller: _confirmPasswordController,
+                        controller: _phone,
                         decoration: InputDecoration(
-                            hintText: "Confirm Password",
+                            hintText: "Phone Number",
                             hintStyle: TextStyle(
                               letterSpacing: 2,
                               color: AppColor.BROWN,
@@ -121,9 +122,9 @@ class Profile extends StatelessWidget {
                           // if(_confirmPasswordController.text == _passwordController.text){
                           //   if(_passwordController.text.length > 6){
                               final profileData = EditProfile(
-                                  // username: _usernameController.text,
-                                password: _confirmPasswordController.text,
-                                token: localStorage.getString("token")
+                                username: _usernameController.text,
+                                phoneNo: _phone.text,
+                                email: _email.text,
                               );
                               final res = await EditProfileServiceWithToken()
                                   .editProfile(profileData);
@@ -132,8 +133,10 @@ class Profile extends StatelessWidget {
                                     context: context,
                                     color: Colors.green,
                                     content: Text("Updated Profile"));
-                                localStorage.setString("username",  _usernameController.text);
                                 Navigator.pop(context);
+
+                                await localStorage.setString("email", _email.text);
+                                await localStorage.setString("phoneNo", _phone.text);
                               }
                               else{
                                 snackThis(

@@ -20,7 +20,7 @@ class Navbar extends StatelessWidget {
               style: TextStyle(fontSize: 20, color: AppColor.BLACK),
             ),
             accountEmail: Text(
-              'kgmail.com',
+              '@gmail.com',
               style: TextStyle(fontSize: 20, color: AppColor.BLACK),
             ),
             currentAccountPicture: CircleAvatar(

@@ -5,12 +5,15 @@ import 'package:krisha/main.dart';
 import 'package:krisha/pages/home.dart';
 import 'package:krisha/pages/profile.dart';
 import 'package:krisha/pages/userpost.dart';
+import 'package:krisha/response/all_post.dart';
+import 'package:krisha/services/admin_log.dart';
 import 'package:krisha/signup/login.dart';
 
 class UserHome extends StatelessWidget {
   final List people = ['Mallika', 'Sejal', 'Susiyana', 'Prasiddhi', 'Yuki'];
 
   var username = localStorage.getString("username");
+
   @override
   Widget build(BuildContext context) {
 
@@ -25,7 +28,7 @@ class UserHome extends StatelessWidget {
                   style: TextStyle(fontSize: 20, color: AppColor.BLACK),
                 ),
                 accountEmail: Text(
-                  '${username.toString()}gmail.com',
+                  '${username.toString()}@gmail.com',
                   style: TextStyle(fontSize: 20, color: AppColor.BLACK),
                 ),
                 currentAccountPicture: CircleAvatar(
@@ -126,12 +129,25 @@ class UserHome extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                  itemCount: people.length,
-                  itemBuilder: (context, index) {
-                    return UserPost(name: people[index]);
-                  }),
+            FutureBuilder<List<AllPostResponse>>(
+              future: GetPostWithToken().getAll(), // async work
+              builder: (BuildContext context, AsyncSnapshot<List<AllPostResponse>> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting: return Text('Loading....');
+                  default:
+                    if (snapshot.hasError)
+                      return Text('Error: ${snapshot.error}');
+                    else
+                      return
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                return UserPost(res: snapshot.data![index]);
+                              }),
+                        );
+                }
+              },
             ),
           ],
         ));
